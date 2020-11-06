@@ -1,0 +1,86 @@
+package com.conecel.asyncdatabase.service;
+
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.conecel.asyncdatabase.entity.Request;
+import com.conecel.asyncdatabase.entityplay.CrSolicitude;
+import com.conecel.asyncdatabase.repository.AsyncRepository;
+import com.conecel.asyncdatabase.repository.AsyncRepositoryNPlay;
+import com.google.gson.Gson;
+import java.util.Date;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+
+@Service
+@Transactional
+public class AsyncService {
+	
+	@Autowired
+	private AsyncRepository async;
+	@Autowired
+	private AsyncRepositoryNPlay asyncNPlay;
+	@Autowired
+	private AmqpTemplate rabbit;
+
+	private static final Logger loggerAsyncDataBase = LogManager.getLogger(AsyncService.class.getName());
+
+	@RabbitListener(queues = "queueAsyncDataBase")
+	public void queueAsyncDataBase(String queue) {
+		try {
+			String threadID = UUID.randomUUID().toString();
+			ThreadContext.put("sid", threadID);
+			
+			loggerAsyncDataBase.info("Request " + queue);
+			
+			Gson gson = new Gson();
+			
+			Request response = new Request();
+			CrSolicitude responsePlay = new CrSolicitude();
+			
+			
+			if (queue.toUpperCase().contains("N-PLAY"))
+			{
+				responsePlay = gson.fromJson(queue, CrSolicitude.class);
+				
+				loggerAsyncDataBase.info("Request a guardar : " + queue);
+				
+				responsePlay.setModificationDate(new Date());
+				try {
+					asyncNPlay.save(responsePlay);
+					
+					loggerAsyncDataBase.info("Se Guardo Exitosamente");
+				} catch (Exception e) {
+					loggerAsyncDataBase.error("Error en Guarda en Base de Datos");
+					loggerAsyncDataBase.error(e);
+					
+					rabbit.convertAndSend("queueAsyncDataBase-exchange", "queueAsyncDataBase-key", queue);
+				}
+			}
+			else
+			{
+				response = gson.fromJson(queue, Request.class);
+				
+				loggerAsyncDataBase.info("Request a guardar : " + queue);
+				response.setModificationDate(new Date());
+				try {
+					async.save(response);
+					loggerAsyncDataBase.info("Se Guardo Exitosamente");
+				} catch (Exception e) {
+					loggerAsyncDataBase.error("Error en Guarda en Base de Datos");
+					loggerAsyncDataBase.error(e);
+					rabbit.convertAndSend("queueAsyncDataBase-exchange", "queueAsyncDataBase-key", queue);
+				}
+			}
+		} catch (Exception e) {
+			loggerAsyncDataBase.info("Error: " + e.getMessage());
+			rabbit.convertAndSend("queueAsyncDataBase-exchange", "queueAsyncDataBase-key", queue);
+		}
+	}
+}

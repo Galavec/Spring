@@ -1,0 +1,13 @@
+package com.conecel.asyncdatabase.repository;
+
+import java.math.BigDecimal;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import com.conecel.asyncdatabase.entity.Request;
+import com.conecel.asyncdatabase.entityplay.CrSolicitude;
+
+@Repository
+public interface AsyncRepositoryNPlay extends JpaRepository<CrSolicitude, BigDecimal> {
+
+}

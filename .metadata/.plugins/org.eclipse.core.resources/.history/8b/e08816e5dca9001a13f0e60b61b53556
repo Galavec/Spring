@@ -1,0 +1,49 @@
+package com.conecel.asyncdatabase.config;
+
+import java.io.File;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class Log4j2Loader {
+	
+	//private String log4j2DirectoryFile = "C:/Users/HITSS/Documents/motor_credito/log/AsyncDataBase/config/log4j2.xml";
+	private String log4j2DirectoryFile = "/asyncdatabase/config/log4j2.xml";
+	
+	static final Logger logger = LogManager.getLogger(Log4j2Loader.class.getName());
+
+	@Bean
+	public String init() {
+		String loggerConfig = log4j2DirectoryFile;
+		
+		LoggerContext context = LoggerContext.getContext(false);
+		
+		File file = new File(loggerConfig);
+		
+		logger.info("Loading configuration log4j2...");
+		
+		context.setConfigLocation(file.toURI());
+		
+		logger.info("Loaded configuration log4j2 succesfully.");
+		
+		logger.info("Se esta iniciando el servicio de:\n\n"
+				+ "                                _____        _        ____                 \r\n"
+				+ "     /\\                        |  __ \\      | |      |  _ \\                \r\n"
+				+ "    /  \\   ___ _   _ _ __   ___| |  | | __ _| |_ __ _| |_) | __ _ ___  ___ \r\n"
+				+ "   / /\\ \\ / __| | | | '_ \\ / __| |  | |/ _` | __/ _` |  _ < / _` / __|/ _ \\ \r\n"
+				+ "  / ____ \\\\__ \\ |_| | | | | (__| |__| | (_| | || (_| | |_) | (_| \\__ \\  __/ \r\n"
+				+ " /_/    \\_\\___/\\__, |_| |_|\\___|_____/ \\__,_|\\__\\__,_|____/ \\__,_|___/\\___| \r\n"
+				+ "                __/ |                                                      \r\n"
+				+ "               |___/                                                       \r\n"
+				+ "\nVersion: 1.42\n"
+				+ "Modificado por: HTS Hector Galarza V.\n" + "Ultimos cambios:\n"
+				+ "       * Se agregó entidades del servicio NPLAY.\n"
+				+ "       * Se actualizó la entidad QUOTA.\n");
+		
+		return "OK";
+	}
+}

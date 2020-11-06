@@ -1,0 +1,207 @@
+package com.conecel.thirdClient.functions;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.conecel.thirdClient.entity.BankReferences;
+
+@Service
+public class Util {
+	@Value("${bank.code}")
+	private static String valueBankCode;
+
+	/**
+	 * PROCESO PARA COMPARAR FECHAS:
+	 * 
+	 * @param firstdate       ------- PUEDE SER LA FECHA DEL SISTEMA.
+	 * @param seconddate
+	 * @param MesesApertura   --- SE ENVIA 0 SI NO SE INCREMENTA MESES A LA
+	 *                        SECONDDATE, O UN VALOR NUMERICO MAYOR A CERO SI SE
+	 *                        DESEA INCREMENTAR MESES A LA SECONDDATE.
+	 * @param FormatoCompleto - SE ENVIA "S" SI SE DESEA VALIDAR EL FORMATO
+	 *                        DD/MM/YYYY HH:MM:SS O SE ENVIA "N" SI SOLO SE DESEA
+	 *                        VALIDAR EN FORMATO DD/MM/YYYY
+	 * @return ---------------- DEVUELVE 0 SI SON IGUALES, DEVUELVE 1 SI SECONDDATE
+	 *         ES MENOR A FIRSTDATE, DEVUELVE 2 SI SECONDDATE ES MAYOR A FIRSTDATE.
+	 */
+	@SuppressWarnings("deprecation")
+	public static int validarFechas(Date firstdate, Date seconddate, int MesesApertura, String FormatoCompleto) {
+		int resultado = 1;
+		try {
+			if (MesesApertura > 0) {
+				Calendar calendar = Calendar.getInstance();
+
+				calendar.setTime(seconddate); // SE CONFIGURA LA FECHA QUE SE RECIBE
+
+				calendar.add(Calendar.MONTH, MesesApertura);
+
+				seconddate = calendar.getTime();
+			}
+
+			if (FormatoCompleto.equals("S")) {
+				System.out.println(firstdate.toString());
+				System.out.println(seconddate.toString());
+
+				if (seconddate.before(firstdate)) {
+					// FECHA DE SECONDDATE ES MENOR AL FIRSTDATE
+					resultado = 1;
+				} else if (firstdate.before(seconddate)) {
+					// FECHA DE SECONDDATE ES MMAYOR AL FIRSTDATE
+					resultado = 2;
+				} else {
+					// FECHA DE SECONDDATE ES IGUAL AL FIRSTDATE
+					resultado = 0;
+				}
+			} else {
+				Date lfirstdate = new Date(firstdate.getYear(), firstdate.getMonth(), firstdate.getDate());
+
+				Date lseconddate = new Date(seconddate.getYear(), seconddate.getMonth(), seconddate.getDate());
+
+				System.out.println(lfirstdate.toString());
+				System.out.println(lseconddate.toString());
+
+				if (lseconddate.before(lfirstdate)) {
+					// FECHA DE LSECONDDATE ES MENOR AL LFIRSTDATE
+					resultado = 1;
+				} else if (lfirstdate.before(lseconddate)) {
+					// FECHA DE LSECONDDATE ES MAYOR AL LFIRSTDATE
+					resultado = 2;
+				} else {
+					// FECHA DE LSECONDDATE ES IGUAL AL LFIRSTDATE
+					resultado = 0;
+				}
+			}
+
+			System.out.println(resultado);
+		} catch (Exception e) {
+			System.out.println("Se Produjo un Error!!!  " + e.getMessage());
+		}
+
+		return resultado;
+	}
+
+	public static Boolean getExpirateDate(Date date) {
+		if (1 == validarFechas(new Date(), date, 0, "N")) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static Boolean getValueBankCode(String description) {
+		Boolean status = false;
+
+		try {
+			String valor = description.split(":=")[0];
+
+			String[] valueArray = valueBankCode.split(",");
+
+			for (String value : valueArray) {
+				if (value.equalsIgnoreCase(valor)) {
+					status = true;
+				}
+			}
+		} catch (Exception e) {
+			status = false;
+		}
+
+		return status;
+	}
+
+	public static Boolean getObservationBank(String observation) {
+		Boolean response = true;
+
+		try {
+			if (observation != null) {
+				String validation = observation.split(":=")[0];
+
+				for (Character c : validation.toCharArray()) {
+					if (!c.equals('0') && !(c=="000")) {
+						response = false;
+					}
+				}
+			} else {
+				response = false;
+			}
+		} catch (Exception e) {
+			response = false;
+		}
+
+		return response;
+	}
+
+	// VALIDACION DE REFERENCIAS BANCARIAS
+	public static boolean validarReferencias(BankReferences banco) {
+		boolean exito = true;
+
+		try {
+			if (banco != null) {
+				if (banco.getAccountState() != null) {
+					if (!(banco.getAccountState().equals("ACTIVA") || banco.getAccountState().equals("ACTIVO")
+							|| banco.getAccountState().equals("A"))) {
+						return false;
+					}
+				}
+
+				if (banco.getOpeningDateAccount() == null) {
+					return false;
+				}
+
+				if (!(banco.getAccountType().equals("CORRIENTE") || banco.getAccountType().equals("AHORRO"))) {
+					return false;
+				}
+
+				if (1 == validarFechas(new Date(), banco.getExpirateDate(), 0, "N")) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			System.out.println("Error en Util.validarReferencias: " + ex.getMessage());
+
+			return false;
+		}
+
+		return exito;
+	}
+
+	// VALIDACION PARA OBTENER EL ULTIMO DIA DEL MES
+	public static Date obtenerUltimoDiaMes() {
+		Calendar cal = Calendar.getInstance();
+
+		@SuppressWarnings("static-access")
+		int iUltimoDiaMes = 0;
+		int iMes = 0;
+		int iAnio = 0;
+
+		SimpleDateFormat sdfFormateador = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date fecha = new Date();
+
+		iUltimoDiaMes = cal.getActualMaximum(cal.DAY_OF_MONTH);
+
+		iMes = cal.get(Calendar.MONTH);
+
+		iMes = iMes + 1;
+
+		iAnio = cal.get(Calendar.YEAR);
+
+		try {
+			fecha = sdfFormateador.parse(iUltimoDiaMes + "/" + iMes + "/" + iAnio);
+			fecha.setHours(23);
+			fecha.setMinutes(59);
+			fecha.setSeconds(59);
+
+			System.out.println("Util.obtenerUltimoDiaMes - Fecha: " + fecha.toString());
+		} catch (Exception ex) {
+			System.out.println("Error en Util.obtenerUltimoDiaMes: " + ex.getMessage());
+		}
+
+		return fecha;
+	}
+}
