@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="trace" monitorInterval="30" >
+	<Properties>
+		   <Property name="log-path">D:/Proyectos/Spring/wsFindStringsInFlatFiles/config</Property>
+	</Properties>
+    <Appenders>
+	    <RollingFile name="FindStringsInFlatFilesLogger" fileName="${log-path}/findStringsInFlatFiles.log"
+			filePattern="${log-path}/findStringsInFlatFiles-%d{yyyy-MM-dd}.log" >
+			<PatternLayout pattern="[%d{yyyyMMddHHmmssSSS}][%-5level][%c{1}][%X{sid}] - Message: %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+				<SizeBasedTriggeringPolicy size="1000MB"/>
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="var/galavec/logs/findStringsInFlatFiles" maxDepth="1">
+					<IfFileName glob="*findStringsInFlatFiles*" />
+					<IfLastModified age="5d"/>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+			<RandomAccessFile name="file-log" fileName="${log-path}/findStringsInFlatFiles.log" immediateFlush="true" append="true">
+			<PatternLayout>
+				<Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} - ID: %X{sid} - Class: %c{1} - Message: %msg%n</Pattern>
+			</PatternLayout>
+		</RandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Root name="com.galavec.findstrings" level="INFO" includeLocation="false">
+			<AppenderRef ref="FindStringsInFlatFilesLogger"/>
+		</Root>
+	</Loggers>
+</Configuration>
