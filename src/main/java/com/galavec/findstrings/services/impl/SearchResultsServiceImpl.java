@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.stereotype.Service;
 
-import com.galavec.findstrings.dto.RegistrosEncontrados;
-import com.galavec.findstrings.dto.RegistrosNoEncontrados;
-import com.galavec.findstrings.dto.RegistrosRepetidos;
+import com.galavec.findstrings.dto.RecordsFoundDto;
+import com.galavec.findstrings.dto.RecordsNotFoundDto;
+import com.galavec.findstrings.dto.RepeatedRecordsDto;
 import com.galavec.findstrings.dto.RequestFindStrings;
 import com.galavec.findstrings.dto.ResponseWillExist;
 import com.galavec.findstrings.services.SearchResultsService;
@@ -47,49 +47,49 @@ public class SearchResultsServiceImpl implements SearchResultsService {
 		initialize();
 
 		ResponseWillExist responseWillExist;
-		var registrosEncontrados = new RegistrosEncontrados();
-		var registrosNoEncontrados = new RegistrosNoEncontrados();
-		var registrosRepetidos = new RegistrosRepetidos();
+		var recordsFoundDto = new RecordsFoundDto();
+		var recordsNotFoundDto = new RecordsNotFoundDto();
+		var repeatedRecordsDto = new RepeatedRecordsDto();
 
-		String[] aNumerosOrdenesRequest;
+		String[] sStringToSearch;
 
-		List<String> lsTextoNoEncontrado = new ArrayList<>();
+		List<String> lTextNotFound = new ArrayList<>();
 
-		aNumerosOrdenesRequest = requestFindStrings.getOrdenesId().split(",");
+		sStringToSearch = requestFindStrings.getStringToSearch().split(",");
 
-		for (String dataToSearch : aNumerosOrdenesRequest) {
+		for (String dataToSearch : sStringToSearch) {
 			verifyAndStoreNonRepeatingData(dataToSearch);
 		}
 
-		responseWillExist = readFile(requestFindStrings.getFileWhereToLook(), requestFindStrings.getLineaAEvitar());
+		responseWillExist = readFile(requestFindStrings.getFileWhereToLook(), requestFindStrings.getLineToAvoid());
 
 		if (responseWillExist != null)
 			return responseWillExist;
 
-		lsTextoNoEncontrado.addAll(this.lNonRepeatingText);
+		lTextNotFound.addAll(this.lNonRepeatingText);
 
 		if (!(this.lAddFoundText.isEmpty())) {
-			lsTextoNoEncontrado.clear();
+			lTextNotFound.clear();
 
 			for (String nonRepeatingText : this.lNonRepeatingText) {
 				if (!(this.lAddFoundText.contains(nonRepeatingText))) {
-					lsTextoNoEncontrado.add(nonRepeatingText);
+					lTextNotFound.add(nonRepeatingText);
 				}
 			}
 		}
 
-		registrosEncontrados.setCantidadEncontrada(lAddFoundText.size());
-		registrosEncontrados.setTextoEncontrado(this.lAddFoundText.toArray(new String[0]));
+		recordsFoundDto.setQuantityFound(lAddFoundText.size());
+		recordsFoundDto.setFoundText(this.lAddFoundText.toArray(new String[0]));
 
-		registrosNoEncontrados.setCantidadNoEncontrada(this.lNonRepeatingText.size());
-		registrosNoEncontrados.setTextoNoEncontrado(lsTextoNoEncontrado.toArray(new String[0]));
+		recordsNotFoundDto.setQuantityNotFound(this.lNonRepeatingText.size());
+		recordsNotFoundDto.setTextNotFound(lTextNotFound.toArray(new String[0]));
 
-		registrosRepetidos.setCantidadTextoRepetido(this.lRepeatedText.size());
-		registrosRepetidos.setTextoRepetido(this.lRepeatedText.toArray(new String[0]));
+		repeatedRecordsDto.setAmountOfRepeatedText(this.lRepeatedText.size());
+		repeatedRecordsDto.setRepeatedText(this.lRepeatedText.toArray(new String[0]));
 
 		logger.info("Ends in SearchResults.groupResults.");
 
-		return new ResponseWillExist(1, "Successful", registrosEncontrados, registrosNoEncontrados, registrosRepetidos);
+		return new ResponseWillExist(1, "Successful", recordsFoundDto, recordsNotFoundDto, repeatedRecordsDto);
 	}
 
 	private void storeRepeatedData(String data) {

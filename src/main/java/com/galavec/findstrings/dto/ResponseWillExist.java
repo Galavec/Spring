@@ -1,4 +1,3 @@
-
 package com.galavec.findstrings.dto;
 
 import lombok.Data;
@@ -7,9 +6,9 @@ import lombok.Data;
 public class ResponseWillExist {
 	private Integer responseCode;
 	private String responseMessage;
-	private RegistrosEncontrados registrosEncontrados;
-	private RegistrosNoEncontrados registrosNoEncontrados;
-	private RegistrosRepetidos registrosRepetidos;
+	private RecordsFoundDto recordsFoundDto;
+	private RecordsNotFoundDto recordsNotFoundDto;
+	private RepeatedRecordsDto repeatedRecordsDto;
 
 	public ResponseWillExist(Integer responseCode, String responseMessage) {
 		this.responseCode = responseCode;
@@ -20,14 +19,14 @@ public class ResponseWillExist {
 		super();
 	}
 
-	public ResponseWillExist(Integer responseCode, String responseMessage, RegistrosEncontrados registrosEncontrados,
-			RegistrosNoEncontrados registrosNoEncontrados, RegistrosRepetidos registrosRepetidos) {
+	public ResponseWillExist(Integer responseCode, String responseMessage, RecordsFoundDto recordsFoundDto,
+			RecordsNotFoundDto recordsNotFoundDto, RepeatedRecordsDto repeatedRecordsDto) {
 		super();
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
-		this.registrosEncontrados = registrosEncontrados;
-		this.registrosNoEncontrados = registrosNoEncontrados;
-		this.registrosRepetidos = registrosRepetidos;
+		this.recordsFoundDto = recordsFoundDto;
+		this.recordsNotFoundDto = recordsNotFoundDto;
+		this.repeatedRecordsDto = repeatedRecordsDto;
 	}
 
 }
