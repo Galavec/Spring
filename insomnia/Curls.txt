@@ -2,7 +2,7 @@ curl --request POST \
   --url http://localhost:9990/findStrings/willExist \
   --header 'Content-Type: application/json' \
   --data '{
-	"ordenesId": "bien,bien,hola,gal,que,que",
-	"lineaAEvitar": "y tu Hector",
+	"stringToSearch": "bien,bien,hola,gal,que,que",
+	"lineToAvoid": "y tu Hector",
 	"fileWhereToLook": "/wsFindStringsInFlatFiles/config/Prueba.txt"
 }'
