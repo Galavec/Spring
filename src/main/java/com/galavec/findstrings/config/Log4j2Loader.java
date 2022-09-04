@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class Log4j2Loader {
 	static final Logger logger = LogManager.getLogger(Log4j2Loader.class.getName());
 
-	private String log4j2DirectoryFile = "D:/Proyectos/Spring/wsFindStringsInFlatFiles/config/log4j2.xml";
+	private String log4j2DirectoryFile = "C:/wsFindStringsInFlatFiles/config/log4j2.xml";
 
 	@Bean
 	public String init() {

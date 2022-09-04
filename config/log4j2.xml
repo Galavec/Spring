@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="trace" monitorInterval="30" >
 	<Properties>
-		   <Property name="log-path">D:/Proyectos/Spring/wsFindStringsInFlatFiles/config</Property>
+		   <Property name="log-path">C:/wsFindStringsInFlatFiles/config</Property>
 	</Properties>
     
 	<Appenders>
@@ -16,9 +16,9 @@
 			</Policies>
 			
 			<DefaultRolloverStrategy>
-				<Delete basePath="var/galavec/logs/findStringsInFlatFiles" maxDepth="1">
+				<Delete basePath="C:/wsFindStringsInFlatFiles/config" maxDepth="1">
 					<IfFileName glob="*findStringsInFlatFiles*" />
-					<IfLastModified age="5d" />
+					<IfLastModified age="4d" />
 				</Delete>
 			</DefaultRolloverStrategy>
 		</RollingFile>
