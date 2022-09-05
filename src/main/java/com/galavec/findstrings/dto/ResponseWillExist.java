@@ -6,9 +6,9 @@ import lombok.Data;
 public class ResponseWillExist {
 	private Integer responseCode;
 	private String responseMessage;
-	private RecordsFoundDto recordsFoundDto;
-	private RecordsNotFoundDto recordsNotFoundDto;
-	private RepeatedRecordsDto repeatedRecordsDto;
+	private RecordsFoundDto recordsFound;
+	private RecordsNotFoundDto recordsNotFound;
+	private RepeatedRecordsDto repeatedRecords;
 
 	public ResponseWillExist(Integer responseCode, String responseMessage) {
 		this.responseCode = responseCode;
@@ -19,14 +19,14 @@ public class ResponseWillExist {
 		super();
 	}
 
-	public ResponseWillExist(Integer responseCode, String responseMessage, RecordsFoundDto recordsFoundDto,
-			RecordsNotFoundDto recordsNotFoundDto, RepeatedRecordsDto repeatedRecordsDto) {
+	public ResponseWillExist(Integer responseCode, String responseMessage, RecordsFoundDto recordsFound,
+			RecordsNotFoundDto recordsNotFound, RepeatedRecordsDto repeatedRecords) {
 		super();
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
-		this.recordsFoundDto = recordsFoundDto;
-		this.recordsNotFoundDto = recordsNotFoundDto;
-		this.repeatedRecordsDto = repeatedRecordsDto;
+		this.recordsFound = recordsFound;
+		this.recordsNotFound = recordsNotFound;
+		this.repeatedRecords = repeatedRecords;
 	}
 
 }

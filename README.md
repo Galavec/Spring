@@ -6,7 +6,7 @@
 Servicio creado para que puedas encontrar cualquier letra o cadena de caracteres dentro de un archivo plano.
 
 ## Codificación:
-Se está codificando en JAVA como su lenguaje de programación y la herramienta MAVEN.
+Se está codificando en JAVA (JDK 11) como su lenguaje de programación y la herramienta MAVEN.
 
 ## Objetivos:
 Espero que a medida que se vayan cumpliendo los objetivos actuales, se añadan otros objetivos y hacer una búsqueda completa en archivos planos.
@@ -24,6 +24,11 @@ Los Objetivos o tareas actuales por realizar son:
 Agradezco de antemano toda ayuda que se le brinde a este repositorio. Que puedas darle el uso respectivo a este servicio o que puedas utilizarlo como aprendizaje en cosas que quizás hasta ahora desconocías 😌
 
 Tal y como leíste en uno de los objetivos ("realizar este servicio en otro lenguaje de programación"), infórmame si puedes hacerlo en otro lenguaje para crear una nueva rama (por ejemplo, C#) y tener guardado ahí ese otro método.
+
+## Recursos:
+Te he dejado una carpera "resources" para que puedas probar el desarrollo, en esta carpeta encontrarás:
+- Insomnia: Curls que te permitiran importar los "Http Request" en el software "Insomnia".
+- JAR: Archivo ".jar" listo para ser usado con JDK 11.
 
 
 # wsFindStringsInFlatFiles - Find characters in a flat file
@@ -48,3 +53,8 @@ The Objectives or current tasks to be carried out are:
 I appreciate in advance any help given to this repository. That you can give the respective use to this service or that you can use it as learning in things that perhaps until now you did not know 😌
 
 As you read in one of the goals ("perform this service in another programming language"), please let me know if you can do it in another language to create a new branch (eg C#) and have that other method saved there.
+
+## Resources:
+I have left you a "resources" folder so that you can test the development, in this folder you will find:
+- Insomnia: Curls that will allow you to import the "Http Request" into the "Insomnia" software.
+- JAR: ".jar" file ready to be used with JDK 11.
